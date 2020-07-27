@@ -3,5 +3,10 @@ from . import Extraction
 
 class SimpleExtraction(Extraction):
 
+
+
   def extract(self):
-    print("i'm extracting " + self.path)
+    with open(self.path) as FileObj:
+      for lines in FileObj:
+
+        print(lines)  # or do some other thing with the line...

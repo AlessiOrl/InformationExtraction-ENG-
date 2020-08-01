@@ -2,9 +2,9 @@ from src.relex import *
 
 
 def main():
-  s1 = SimpleExtraction("data/tagged/11_alices_adventures_in_wonderland.tagged")
+  s1 = SimpleExtraction("../data/tagged/2489_moby_dick.tagged")
   print("------------------------------")
-  s1.extract()
+  print(s1.get__NameDict())
 
 
 main()

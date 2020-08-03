@@ -2,9 +2,9 @@ from src.relex import *
 
 
 def main():
-  s1 = SimpleExtraction("../data/tagged/2489_moby_dick.tagged")
-  print("------------------------------")
-  print(s1.get__NameDict())
+    s1 = PatternExtraction("11_alices_adventures_in_wonderland.txt")
+    print("\n")
+    s1.Spacypatternmatching()
 
 
 main()

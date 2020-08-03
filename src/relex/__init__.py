@@ -1,3 +1,3 @@
-__all__ = ["Extraction", "SimpleExtraction"]
+__all__ = ["Extraction", "PatternExtraction"]
 from .Extraction import Extraction
-from .SimpleExtraction import SimpleExtraction
+from .PatternExtraction import PatternExtraction

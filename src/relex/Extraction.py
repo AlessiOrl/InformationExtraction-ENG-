@@ -1,14 +1,16 @@
 from abc import abstractmethod
+import os
 
 
 class Extraction:
 
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, filename):
+        self.filename = filename
         self.__NameDict = {}
 
         def extractname():
-            with open(self.path) as FileObj:
+            path = "../data/tagged/" + os.path.splitext(self.filename)[0] + ".tagged"
+            with open(path) as FileObj:
                 for line in FileObj:
                     i = line[:-1].split("\t")
                     if i[2] != "PER": continue

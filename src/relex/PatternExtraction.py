@@ -1,5 +1,7 @@
+from stanza.server import CoreNLPClient
 from . import Extraction
 import stanza, spacy
+
 import io
 from spacy.pipeline import SentenceSegmenter
 from spacy.matcher import Matcher
@@ -8,6 +10,19 @@ from spacy import displacy
 
 
 class PatternExtraction(Extraction):
+    """Angel X. Chang and Christopher D. Manning. 2014. TokensRegex: Defining cascaded regular expressions over tokens. Stanford University Technical Report, 2014. [bib]"""
+    def Stanzacorenlppatternmatching(self):
+        path = "../data/originalTexts/" + self.filename
+        text = open(path).read()
+        with CoreNLPClient(
+                annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'parse', 'depparse'],
+                timeout=30000,
+                memory='16G') as client:
+            # Use tokensregex patterns to find who wrote a sentence.
+            pattern = '([ner: PERSON]+) /wrote/ /an?/ []{0,3} /sentence|article/'
+            matches = client.tokensregex(text, pattern)
+
+            print(len(matches["sentences"]))
 
     def Stanzapatternmatching(self):
         path = "../data/originalTexts/" + self.filename
@@ -17,6 +32,7 @@ class PatternExtraction(Extraction):
         # Tokenization and sentence segmentation (every sentence is a group of tokens)
         doc = nlp(text)
 
+        pattern = '/said [ner: PERSON]'
 
         # SAVE SENTENCES IN FILE
         """f = open("StanzaSegmentation.txt", "w+")

@@ -1,28 +1,25 @@
-from stanza.server import CoreNLPClient
 from . import Extraction
 import stanza, spacy
-
-import io
-from spacy.pipeline import SentenceSegmenter
-from spacy.matcher import Matcher
-from spacy.tokens import Span
-from spacy import displacy
+from spacy_stanza import StanzaLanguage
 
 
 class PatternExtraction(Extraction):
-    """Angel X. Chang and Christopher D. Manning. 2014. TokensRegex: Defining cascaded regular expressions over tokens. Stanford University Technical Report, 2014. [bib]"""
-    def Stanzacorenlppatternmatching(self):
-        path = "../data/originalTexts/" + self.filename
-        text = open(path).read()
-        with CoreNLPClient(
-                annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'parse', 'depparse'],
-                timeout=30000,
-                memory='16G') as client:
-            # Use tokensregex patterns to find who wrote a sentence.
-            pattern = '([ner: PERSON]+) /wrote/ /an?/ []{0,3} /sentence|article/'
-            matches = client.tokensregex(text, pattern)
+    """Angel X. Chang and Christopher D. Manning. 2014. TokensRegex: Defining cascaded regular expressions over
+    tokens. Stanford University Technical Report, 2014. [bib] """
 
-            print(len(matches["sentences"]))
+    def SpacyStanzaPatternMatching(self):
+        path = "../data/originalTexts/" + self.filename
+
+        snlp = stanza.Pipeline(lang="en")
+        nlp = StanzaLanguage(snlp)
+        text = open(path).read()
+        doc = nlp(text)
+
+        # SAVE SENTENCES IN FILE
+        f = open("SpacyStanzaSegmentation.txt", "w+")
+        for sentence in doc.sents:
+            f.write("\n |--------------------------------------| \n" + sentence.text)
+        f.close()
 
     def Stanzapatternmatching(self):
         path = "../data/originalTexts/" + self.filename
@@ -31,8 +28,6 @@ class PatternExtraction(Extraction):
         nlp = stanza.Pipeline(lang='en', processors='tokenize')
         # Tokenization and sentence segmentation (every sentence is a group of tokens)
         doc = nlp(text)
-
-        pattern = '/said [ner: PERSON]'
 
         # SAVE SENTENCES IN FILE
         """f = open("StanzaSegmentation.txt", "w+")

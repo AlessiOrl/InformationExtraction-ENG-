@@ -1,6 +1,9 @@
 from . import Extraction
-import stanza, spacy
-from spacy_stanza import StanzaLanguage
+import spacy_stanza, spacy, stanza, spacy_wordnet, nltk, neuralcoref
+from nltk.corpus import wordnet as wn
+from spacy_wordnet.wordnet_annotator import WordnetAnnotator
+
+
 
 
 class PatternExtraction(Extraction):
@@ -10,16 +13,25 @@ class PatternExtraction(Extraction):
     def SpacyStanzaPatternMatching(self):
         path = "../data/originalTexts/" + self.filename
 
+        # scaricamento di wordnet in inglese e multi-language (omw = Open Multi Wordnet)
+        nltk.downloader.download('wordnet')
+        nltk.downloader.download('omw')
+        stanza.download("en")
+
         snlp = stanza.Pipeline(lang="en")
-        nlp = StanzaLanguage(snlp)
+        nlp = spacy_stanza.StanzaLanguage(snlp)
+        nlp.add_pipe(WordnetAnnotator(snlp.lang))
         text = open(path).read()
         doc = nlp(text)
 
+        for e in doc.sents:
+            print(e.text + "\n|---------------------------------------------|\n")
+
         # SAVE SENTENCES IN FILE
-        f = open("SpacyStanzaSegmentation.txt", "w+")
+        '''f = open("SpacyStanzaSegmentation.txt", "w+")
         for sentence in doc.sents:
             f.write("\n |--------------------------------------| \n" + sentence.text)
-        f.close()
+        f.close()'''
 
     def Stanzapatternmatching(self):
         path = "../data/originalTexts/" + self.filename
